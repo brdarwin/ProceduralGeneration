@@ -9,7 +9,7 @@ int main (){
     float  maxSizeY = 400;
     sf:: RenderWindow theWindow(sf::VideoMode(maxSizeX,maxSizeY),  "Random Walker");
     theWindow.setFramerateLimit(60);
-    Walker myWalker(maxSizeX/2, maxSizeY/2, maxSizeX, maxSizeY);
+    Walker myWalker(maxSizeX/2, maxSizeY/2, maxSizeX, maxSizeY, 5);
     sf :: CircleShape circleWalker(1.0f);
     circleWalker.setFillColor(sf::Color(255,255,0));
     
@@ -21,12 +21,14 @@ int main (){
             }
         
         }
+        myWalker.setMovementRange();
         myWalker.nextStep();
         myWalker.eliminatingBorders();
         myWalker.setWalkerPosition(circleWalker);
          
         theWindow.draw(circleWalker);
         theWindow.display();
+	    //theWindow.clear();
     }
     return 0;
 }

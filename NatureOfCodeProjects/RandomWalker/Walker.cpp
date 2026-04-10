@@ -6,11 +6,13 @@
 
 
 
-Walker :: Walker (float xPosition, float yPosition, float screenSizeX, float screenSizeY){
+Walker :: Walker (float xPosition, float yPosition, float screenSizeX, float screenSizeY, float movementRange){
     xPosition_ = xPosition;
     yPosition_ = yPosition;
     maxSizeX_  = screenSizeX;
     maxSizeY_  = screenSizeY;
+    movementRange_ = movementRange;
+    movementRangeIndex_ = movementRange;
 }
 
 void Walker :: setPosition(float newPosition, bool isXPosition){
@@ -30,9 +32,7 @@ float Walker :: getPosition(bool isXPosition){
     return yPosition_;
 }
 
-void Walker  :: nextStep(){
-    
-     
+void Walker :: randomFunction(){
     int min = 0;
     int max = 7;
 
@@ -42,27 +42,43 @@ void Walker  :: nextStep(){
     std:: uniform_int_distribution<> distrib(min, max);
 
     
-    int setDiretion = distrib(gen);
+    setDirection_ = distrib(gen);
+
+}
+
+void Walker:: setMovementRange(){
+    if(movementRangeIndex_  >= movementRange_){
+        randomFunction();
+        movementRangeIndex_ = 0;
+    }else{
+        movementRangeIndex_ = movementRangeIndex_ + 1;
+    }
+}
+
+void Walker  :: nextStep(){
+    
+     
+
 
     
     
 
     
-    if(setDiretion == 0){ 
+    if(setDirection_ == 0){ 
         setPosition(xPosition_ + 1,  true);
-    }else if(setDiretion == 1){ 
+    }else if(setDirection_ == 1){ 
         setPosition(xPosition_ - 1,  true);
-    }else if(setDiretion == 2){ 
+    }else if(setDirection_ == 2){ 
         setPosition(yPosition_ + 1,  false);
-    }else if(setDiretion == 3) {
+    }else if(setDirection_ == 3) {
         setPosition(yPosition_ - 1,  false);
-    }else if(setDiretion == 4){
+    }else if(setDirection_ == 4){
         setPosition(xPosition_ + 1,  true);
         setPosition(yPosition_ + 1,  false);
-    }else if(setDiretion == 5){
+    }else if(setDirection_ == 5){
         setPosition(xPosition_ + 1,  true);
         setPosition(yPosition_ - 1,  false);
-    }else if(setDiretion == 6){
+    }else if(setDirection_ == 6){
         setPosition(xPosition_ - 1,  true);
         setPosition(yPosition_ + 1,  false);
     }else{
@@ -72,6 +88,8 @@ void Walker  :: nextStep(){
     
     
 }
+
+
 
 void Walker:: eliminatingBorders(){
     if(getPosition(true) > maxSizeX_){

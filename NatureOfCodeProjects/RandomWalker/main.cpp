@@ -25,10 +25,9 @@ int main (){
         myWalker.nextStep();
         myWalker.eliminatingBorders();
         myWalker.setWalkerPosition(circleWalker);
-         
         theWindow.draw(circleWalker);
         theWindow.display();
-	    //theWindow.clear();
+	    
     }
     return 0;
 }

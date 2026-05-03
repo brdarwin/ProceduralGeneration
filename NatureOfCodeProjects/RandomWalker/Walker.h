@@ -23,7 +23,8 @@ class Walker{
     Walker(float xPosition,  float yPosition, float screenSizeX, float screenSizeY,float  usualRange,float  leviFlightRange, int    leviFlightProbability, sf:: Color walkerColor);
     void setPosition( float newPosition, bool isXPosition);
     float getPosition(bool isXPosition);
-    int randomFunction(int min, int max, bool isLeviFlight);
+    template <typename T> T randomFunction(T min, T max, bool isFloat);
+    float acceptRejectAlgorithm();
     void leviFlight();
     void setMovementRange();
     void nextStep();

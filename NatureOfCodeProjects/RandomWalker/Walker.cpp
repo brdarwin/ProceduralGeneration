@@ -36,24 +36,34 @@ float Walker :: getPosition(bool isXPosition){
     return yPosition_;
 }
 
-int Walker :: randomFunction(int min, int max, bool isLeviFlight){
+template<typename T> T Walker :: randomFunction(T min, T max, bool isFloat){
    
 
     
     std :: random_device rd;
     std :: mt19937 gen(rd());
-    std:: uniform_int_distribution<> distrib(min, max);
-    if(isLeviFlight == false){
-        return distrib(gen);
+    if(isFloat){
+        std:: uniform_real_distribution<float> distrib(min, max);
+        return  distrib(gen);
     }
-    
+
+    std:: uniform_int_distribution<> distrib(min, max);
     return  distrib(gen);
 
 }
 
+float Walker :: acceptRejectAlgorithm(){
+    float probability = randomFunction<float>(0,usualRange_, true);
+    float newNumber = randomFunction<float>(0,usualRange_, true);
+    if(probability > newNumber){
+        return probability;
+    }
+    return acceptRejectAlgorithm();
+}
+
 void Walker:: leviFlight(){
     if(movementRangeIndex_ == 0){
-        if(randomFunction(0,100, true) <= leviFlightProbability_){
+        if(randomFunction<int>(0,100,  false) <= leviFlightProbability_){
             movementRange_ = leviFlightRange_;
         }else{
             movementRange_ = usualRange_;
@@ -63,7 +73,7 @@ void Walker:: leviFlight(){
 
 void Walker:: setMovementRange(){
     if(movementRangeIndex_  >= movementRange_){
-        setDirection_ = randomFunction(0, 7, false);
+        setDirection_ = randomFunction<int>(0, 7, false);
         movementRangeIndex_ = 0;
     }else{
         movementRangeIndex_ = movementRangeIndex_ + 1;

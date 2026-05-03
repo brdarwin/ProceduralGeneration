@@ -5,11 +5,14 @@
 
 
 int main (){
-    float  maxSizeX = 600;
-    float  maxSizeY = 400;
+    float  maxSizeX = 1900;
+    float  maxSizeY = 800;
+    float  usualRange = 5;
+    float  leviFlightRange = 100 ;
+    int    leviProbability = 1;
     sf:: RenderWindow theWindow(sf::VideoMode(maxSizeX,maxSizeY),  "Random Walker");
     theWindow.setFramerateLimit(60);
-    Walker myWalker(maxSizeX/2, maxSizeY/2, maxSizeX, maxSizeY, 5);
+    Walker myWalker(maxSizeX/2, maxSizeY/2, maxSizeX, maxSizeY, usualRange, leviFlightRange,leviProbability);
     sf :: CircleShape circleWalker(1.0f);
     circleWalker.setFillColor(sf::Color(255,255,0));
     
@@ -21,6 +24,7 @@ int main (){
             }
         
         }
+        myWalker.leviFlight();
         myWalker.setMovementRange();
         myWalker.nextStep();
         myWalker.eliminatingBorders();

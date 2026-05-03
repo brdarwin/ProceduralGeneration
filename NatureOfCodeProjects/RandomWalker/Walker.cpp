@@ -6,13 +6,16 @@
 
 
 
-Walker :: Walker (float xPosition, float yPosition, float screenSizeX, float screenSizeY, float movementRange){
+Walker :: Walker(float xPosition,  float yPosition, float screenSizeX, float screenSizeY,float usualRange,float leviFlightRange, int leviFlightProbability){
     xPosition_ = xPosition;
     yPosition_ = yPosition;
     maxSizeX_  = screenSizeX;
     maxSizeY_  = screenSizeY;
-    movementRange_ = movementRange;
-    movementRangeIndex_ = movementRange;
+    usualRange_ = usualRange;
+    leviFlightRange_ = leviFlightRange ;
+    leviFlightProbability_ = leviFlightProbability;
+    movementRange_ = usualRange;
+    movementRangeIndex_ = usualRange;
 }
 
 void Walker :: setPosition(float newPosition, bool isXPosition){
@@ -32,23 +35,34 @@ float Walker :: getPosition(bool isXPosition){
     return yPosition_;
 }
 
-void Walker :: randomFunction(){
-    int min = 0;
-    int max = 7;
+int Walker :: randomFunction(int min, int max, bool isLeviFlight){
+   
 
     
     std :: random_device rd;
     std :: mt19937 gen(rd());
     std:: uniform_int_distribution<> distrib(min, max);
-
+    if(isLeviFlight == false){
+        return distrib(gen);
+    }
     
-    setDirection_ = distrib(gen);
+    return  distrib(gen);
 
+}
+
+void Walker:: leviFlight(){
+    if(movementRangeIndex_ == 0){
+        if(randomFunction(0,100, true) <= leviFlightProbability_){
+            movementRange_ = leviFlightRange_;
+        }else{
+            movementRange_ = usualRange_;
+        }
+    }
 }
 
 void Walker:: setMovementRange(){
     if(movementRangeIndex_  >= movementRange_){
-        randomFunction();
+        setDirection_ = randomFunction(0, 7, false);
         movementRangeIndex_ = 0;
     }else{
         movementRangeIndex_ = movementRangeIndex_ + 1;

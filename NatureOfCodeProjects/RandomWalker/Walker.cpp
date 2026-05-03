@@ -6,7 +6,7 @@
 
 
 
-Walker :: Walker(float xPosition,  float yPosition, float screenSizeX, float screenSizeY,float usualRange,float leviFlightRange, int leviFlightProbability){
+Walker :: Walker(float xPosition,  float yPosition, float screenSizeX, float screenSizeY,float usualRange,float leviFlightRange, int leviFlightProbability, sf::  Color walkerColor){
     xPosition_ = xPosition;
     yPosition_ = yPosition;
     maxSizeX_  = screenSizeX;
@@ -16,6 +16,7 @@ Walker :: Walker(float xPosition,  float yPosition, float screenSizeX, float scr
     leviFlightProbability_ = leviFlightProbability;
     movementRange_ = usualRange;
     movementRangeIndex_ = usualRange;
+    walkerColor_ = walkerColor;
 }
 
 void Walker :: setPosition(float newPosition, bool isXPosition){
@@ -126,5 +127,6 @@ void Walker:: eliminatingBorders(){
 }
 
 void Walker:: setWalkerPosition(sf:: CircleShape& shape){
+    shape.setFillColor(walkerColor_);
     shape.setPosition(sf:: Vector2f(getPosition(true),getPosition(false)));
 }

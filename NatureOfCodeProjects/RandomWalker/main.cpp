@@ -6,15 +6,18 @@
 
 int main (){
     float  maxSizeX = 1900;
-    float  maxSizeY = 800;
-    float  usualRange = 5;
-    float  leviFlightRange = 100 ;
-    int    leviProbability = 1;
+    float  maxSizeY = 600;
     sf:: RenderWindow theWindow(sf::VideoMode(maxSizeX,maxSizeY),  "Random Walker");
     theWindow.setFramerateLimit(60);
-    Walker myWalker(maxSizeX/2, maxSizeY/2, maxSizeX, maxSizeY, usualRange, leviFlightRange,leviProbability);
+    std:: vector <Walker> walkers;
+    Walker classicWalker(maxSizeX/2, maxSizeY/2, maxSizeX, maxSizeY, 0, 0,0, sf::Color(255, 0, 0));
+    Walker rangedStepsWalker(maxSizeX/4, maxSizeY/2, maxSizeX, maxSizeY, 5, 0,0, sf::Color(0, 255, 0));
+    Walker levyWalker(maxSizeX * (4/3), maxSizeY/2, maxSizeX, maxSizeY, 5, 100,1, sf::Color(0, 0, 255));
+    walkers.push_back(classicWalker);
+    walkers.push_back(rangedStepsWalker);
+    walkers.push_back(levyWalker);
     sf :: CircleShape circleWalker(1.0f);
-    circleWalker.setFillColor(sf::Color(255,255,0));
+    
     
     while(theWindow.isOpen()){
         sf::Event event;
@@ -24,12 +27,15 @@ int main (){
             }
         
         }
-        myWalker.leviFlight();
-        myWalker.setMovementRange();
-        myWalker.nextStep();
-        myWalker.eliminatingBorders();
-        myWalker.setWalkerPosition(circleWalker);
-        theWindow.draw(circleWalker);
+        for(int i = 0; i < walkers.size(); i++){
+            walkers[i].leviFlight();
+            walkers[i].setMovementRange();
+            walkers[i].nextStep();
+            walkers[i].eliminatingBorders();
+            walkers[i].setWalkerPosition(circleWalker);
+            theWindow.draw(circleWalker);
+        }
+        
         theWindow.display();
 	    
     }

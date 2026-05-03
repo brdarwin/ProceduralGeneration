@@ -16,10 +16,11 @@ class Walker{
     float  movementRange_;
     float  movementRangeIndex_;
     int    setDirection_ = 0;
+    sf :: Color walkerColor_;
 
     
     public:
-    Walker(float xPosition,  float yPosition, float screenSizeX, float screenSizeY,float  usualRange,float  leviFlightRange, int    leviFlightProbability);
+    Walker(float xPosition,  float yPosition, float screenSizeX, float screenSizeY,float  usualRange,float  leviFlightRange, int    leviFlightProbability, sf:: Color walkerColor);
     void setPosition( float newPosition, bool isXPosition);
     float getPosition(bool isXPosition);
     int randomFunction(int min, int max, bool isLeviFlight);

@@ -11,8 +11,8 @@ class Walker{
     float  maxSizeX_;
     float  maxSizeY_;
     float  usualRange_;
-    float  leviFlightRange_;
-    int    leviFlightProbability_;
+    float  levyFlightRange_;
+    int    levyFlightProbability_;
     float  movementRange_;
     float  movementRangeIndex_;
     int    setDirection_ = 0;
@@ -20,12 +20,12 @@ class Walker{
 
     
     public:
-    Walker(float xPosition,  float yPosition, float screenSizeX, float screenSizeY,float  usualRange,float  leviFlightRange, int    leviFlightProbability, sf:: Color walkerColor);
+    Walker(float xPosition,  float yPosition, float screenSizeX, float screenSizeY,float  usualRange,float  levyFlightRange, int    levyFlightProbability, sf:: Color walkerColor);
     void setPosition( float newPosition, bool isXPosition);
     float getPosition(bool isXPosition);
     template <typename T> T randomFunction(T min, T max, bool isFloat);
     float acceptRejectAlgorithm();
-    void leviFlight();
+    void levyFlight();
     void setMovementRange();
     void nextStep();
     void eliminatingBorders();

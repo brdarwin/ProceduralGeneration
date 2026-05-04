@@ -5,8 +5,8 @@
 
 
 int main (){
-    float  maxSizeX = 1900;
-    float  maxSizeY = 600;
+    float  maxSizeX = 1920;
+    float  maxSizeY = 1080;
     sf:: RenderWindow theWindow(sf::VideoMode(maxSizeX,maxSizeY),  "Random Walker");
     theWindow.setFramerateLimit(60);
     std:: vector <Walker> walkers;
@@ -28,7 +28,7 @@ int main (){
         
         }
         for(int i = 0; i < walkers.size(); i++){
-            walkers[i].leviFlight();
+            walkers[i].levyFlight();
             walkers[i].setMovementRange();
             walkers[i].nextStep();
             walkers[i].eliminatingBorders();

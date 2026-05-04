@@ -6,14 +6,14 @@
 
 
 
-Walker :: Walker(float xPosition,  float yPosition, float screenSizeX, float screenSizeY,float usualRange,float leviFlightRange, int leviFlightProbability, sf::  Color walkerColor){
+Walker :: Walker(float xPosition,  float yPosition, float screenSizeX, float screenSizeY,float usualRange,float levyFlightRange, int levyFlightProbability, sf::  Color walkerColor){
     xPosition_ = xPosition;
     yPosition_ = yPosition;
     maxSizeX_  = screenSizeX;
     maxSizeY_  = screenSizeY;
     usualRange_ = usualRange;
-    leviFlightRange_ = leviFlightRange ;
-    leviFlightProbability_ = leviFlightProbability;
+    levyFlightRange_ = levyFlightRange ;
+    levyFlightProbability_ = levyFlightProbability;
     movementRange_ = usualRange;
     movementRangeIndex_ = usualRange;
     walkerColor_ = walkerColor;
@@ -61,10 +61,10 @@ float Walker :: acceptRejectAlgorithm(){
     return acceptRejectAlgorithm();
 }
 
-void Walker:: leviFlight(){
+void Walker:: levyFlight(){
     if(movementRangeIndex_ == 0){
-        if(randomFunction<int>(0,100,  false) <= leviFlightProbability_){
-            movementRange_ = leviFlightRange_;
+        if(randomFunction<int>(0,100,  false) <= levyFlightProbability_){
+            movementRange_ = levyFlightRange_;
         }else{
             movementRange_ = usualRange_;
         }

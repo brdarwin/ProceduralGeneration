@@ -32,6 +32,7 @@ void :: OneDPerlin :: settingGradPoints(){
         gradPoints_.push_back(Point(i,randFunction(-1,1)));
 
     }
+    gradPoints_.push_back(Point(xAxisSize_,randFunction(-1,1)));
 }
 
 void :: OneDPerlin :: settingSlopePoints(){
@@ -44,9 +45,10 @@ void :: OneDPerlin :: settingSlopePoints(){
             float slopePoint = j;
             float distPrevious = previousSlope * (slopePoint - previousPoint); 
             float distNext = nextSlope *(nextPoint - slopePoint);
-            //float t = (slopePoint - previousPoint) / (nextPoint - previousPoint);
-            //float u = t * t * (3 - 2 * t); 
-            float u = (slopePoint - previousPoint) / (nextPoint - previousPoint);
+            float t = (slopePoint - previousPoint) / (nextPoint - previousPoint);
+            //float u = t * t * (3 - 2 * t);
+            float u = (3 * std:: pow(t,2)) - (2 * std::pow(t,3));
+            //float u = (slopePoint - previousPoint) / (nextPoint - previousPoint);
             float value = (1 - u) * distPrevious + u * distNext;
             slopePoints_.push_back(value);
             

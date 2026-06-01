@@ -10,9 +10,9 @@
 int main (){
     float  maxSizeX = 1920;
     float  maxSizeY = 1080;
-    float  slopeRange  = 0.1;
-    float  minGradRange = 5;
-    float  maxGradRnage = 300;
+    float  slopeRange  = 1;
+    float  minGradRange = 1;
+    float  maxGradRnage = 400;
     
     sf:: RenderWindow theWindow(sf::VideoMode(maxSizeX,maxSizeY),  "1D Perlin Noise");
     theWindow.setFramerateLimit(60);
@@ -26,16 +26,7 @@ int main (){
     float xValue = 0;
     float yValue = dotGraph.getPosition().y;
     int i = 0;
-    sf :: CircleShape dotGraph2(1.0f);
-    dotGraph2.setFillColor(sf::Color(255,255,0));
-    dotGraph2.setPosition(0,maxSizeY/4);
-    OneDPerlin Perlin2(minGradRange,maxGradRnage,1,maxSizeX,maxSizeY);
-    Perlin2.settingGradPoints();
-    Perlin2.settingSlopePoints();
-    std:: vector<float> dotsYPositions2 = Perlin2.gettingPerlin(); 
-    float xValue2 = 0;
-    float yValue2 = dotGraph2.getPosition().y;
-    int i2 = 0;
+    
     while(theWindow.isOpen()){
         sf::Event event;
         while (theWindow.pollEvent(event)){
@@ -46,8 +37,7 @@ int main (){
         }
         dotGraph.setPosition(xValue, yValue);
         theWindow.draw(dotGraph);
-        dotGraph2.setPosition(xValue2, yValue2);
-        theWindow.draw(dotGraph2);
+        
         theWindow.display();
         if(i < dotsYPositions.size()){
             yValue = dotsYPositions[i] + maxSizeY/2;
@@ -55,12 +45,7 @@ int main (){
             xValue = xValue + slopeRange;
             i = i + 1;
         }
-        if(i2 < dotsYPositions2.size()){
-            yValue2 = dotsYPositions2[i] + maxSizeY/4;
-            
-            xValue2 = xValue2 + 1;
-            i2 = i2 + 1;
-        }
+       
 	    
     }
     

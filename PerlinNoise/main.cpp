@@ -65,6 +65,13 @@ sf :: Color cmy360(float noise){
     return sf :: Color(r,g,b);
 }
 
+sf :: Color mix_cmy360_rgb360(float noise){
+    if(noise < 0){
+        return cmy360(((noise -1) / 2));
+    }
+    return rgb360(noise);
+}
+
 sf :: Color waterLevel (float noise, float waterLevel){
     float r = 0.0;
     float  g = 255;
@@ -98,7 +105,8 @@ int main(){
         //float colors   =  variation_0_255(p.getNoiseValue());
         //sf :: Color pixelColor(colors, colors, colors);
         //sf :: Color pixelColor = rgb360(p.getNoiseValue());
-        sf :: Color pixelColor = cmy360(p.getNoiseValue());
+        //sf :: Color pixelColor = cmy360(p.getNoiseValue());
+        sf :: Color pixelColor = mix_cmy360_rgb360(p.getNoiseValue());
         //sf :: Color pixelColor = waterLevel(p.getNoiseValue(),   0.75f);
         img.setPixel(p.getCoordOrVecWeight(true).x,p.getCoordOrVecWeight(true).y, pixelColor);
     }
@@ -108,7 +116,7 @@ int main(){
     tex.loadFromImage(img);
     sf :: Sprite sprite(tex);
     
-    img.saveToFile("/home/bruno/CompSci/ProceduralGeneration/PerlinNoise/Images/example_cmy360.png");
+    img.saveToFile("/home/bruno/CompSci/ProceduralGeneration/PerlinNoise/Images/example_cmy360_rgb360.png");
    
     while(theWindow.isOpen()){
         sf::Event event;

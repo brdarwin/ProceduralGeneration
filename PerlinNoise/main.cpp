@@ -23,22 +23,21 @@ float black_and_white (float noise){
 sf :: Color rgb360(float noise){
     noise  =  360 *  ((1 - noise) / 2);
     float r, g, b;
-    if(0 < noise <=  120){
-        r = (255 * noise) / 120;
-        g =  255 - ((255 * noise) / 120);
+    if((noise  <=  120)){
+        float  t = noise / 120;
+        r = 255 * t;
+        g =  255 * (1 -t);
         b =  0.0f;
-    } else if( 120 < noise <= 240 ){
-        r =  255 - ((255 * noise) / 120);
+    } else if( noise <= 240 ){
+        float t =  (noise - 120) / 120;
+        r =  255 * (1 - t);
         g =  0.0f;
-        b =  (255 * noise) / 120;
-    } else if( (240 < noise <= 359)  || noise == 0){
-        r =  0.0f;
-        g =  (255 * noise) / 120;
-        b =   255 - ((255 * noise) / 120);
+        b =  255 * t;
     }else{
-        r = 255;
-        b = 255;
-        g = 255;
+        float t =  (noise - 240) / 120;
+        r =  0.0f;
+        g =  255 * t;
+        b =   255 * (1 - t);
     }
     
     return sf :: Color(r,g,b);
@@ -58,9 +57,9 @@ sf :: Color waterLevel (float noise, float waterLevel){
 }
 
 int main(){
-    float maxSizeX = 100;
-    float maxSizeY = 100;
-    int   gradientDimension = 200;
+    float maxSizeX = 1000;
+    float maxSizeY = 1000;
+    int   gradientDimension = 100;
     Perlin2D  myPerlin(sf :: Vector2f(maxSizeX, maxSizeY),gradientDimension);
     myPerlin.setGradients();
     myPerlin.setScreenPoints();
@@ -76,9 +75,9 @@ int main(){
         //float colors = black_and_white(p.getNoiseValue());
         //float colors   =  variation_0_255(p.getNoiseValue());
         //sf :: Color pixelColor(colors, colors, colors);
-        //sf :: Color pixelColor = rgb360(p.getNoiseValue());
+        sf :: Color pixelColor = rgb360(p.getNoiseValue());
         //sf :: Color pixelColor = waterLevel(p.getNoiseValue(),   0.75f);
-        //img.setPixel(p.getCoordOrVecWeight(true).x,p.getCoordOrVecWeight(true).y, pixelColor);
+        img.setPixel(p.getCoordOrVecWeight(true).x,p.getCoordOrVecWeight(true).y, pixelColor);
     }
     
     
@@ -86,6 +85,7 @@ int main(){
     tex.loadFromImage(img);
     sf :: Sprite sprite(tex);
     
+    img.saveToFile("/home/bruno/CompSci/ProceduralGeneration/PerlinNoise/Images/example_rgb360.png");
    
     while(theWindow.isOpen()){
         sf::Event event;

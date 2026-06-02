@@ -87,6 +87,10 @@ void  :: Point :: setNoiseValue(std :: vector<Point> vecGradPoints){
     
 }
 
+void :: Point :: setNoiseValue(float noise){
+    noiseValue_ = noise;
+}
+
 float :: Point ::getNoiseValue(){
     return noiseValue_;
 }

@@ -72,25 +72,17 @@ sf :: Color mix_cmy360_rgb360(float noise){
     return rgb360(noise);
 }
 
-sf :: Color waterLevel (float noise, float waterLevel){
-    float r = 0.0;
-    float  g = 255;
-    float b  = 0;
-    if(noise <= waterLevel){
-        b = variation_0_255(noise);
-        g = 0.0;
-    }
 
-    return sf :: Color(r,g,b);
-
-}
 
 int main(){
-    float maxSizeX = 1000;
-    float maxSizeY = 1000;
-    int   gradientDimension = 100;
-    Perlin2D  myPerlin(sf :: Vector2f(maxSizeX, maxSizeY),gradientDimension);
-    myPerlin.setGradients();
+    float maxSizeX = 1024;
+    float maxSizeY = 1024;
+    float maxGradient = maxSizeX;
+    //float maxGradient = 256;
+    float minGradient = 256;
+    
+    Perlin2D  myPerlin(sf :: Vector2f(maxSizeX, maxSizeY),maxGradient,minGradient);
+    myPerlin.setOctavePoints();
     myPerlin.setScreenPoints();
     std :: vector<Point> screenPoints = myPerlin.getScreenPoints();
     sf:: RenderWindow theWindow(sf::VideoMode(maxSizeX,maxSizeY),  "2D Pelrlin Noise");
@@ -107,7 +99,6 @@ int main(){
         //sf :: Color pixelColor = rgb360(p.getNoiseValue());
         //sf :: Color pixelColor = cmy360(p.getNoiseValue());
         sf :: Color pixelColor = mix_cmy360_rgb360(p.getNoiseValue());
-        //sf :: Color pixelColor = waterLevel(p.getNoiseValue(),   0.75f);
         img.setPixel(p.getCoordOrVecWeight(true).x,p.getCoordOrVecWeight(true).y, pixelColor);
     }
     
@@ -116,7 +107,7 @@ int main(){
     tex.loadFromImage(img);
     sf :: Sprite sprite(tex);
     
-    img.saveToFile("/home/bruno/CompSci/ProceduralGeneration/PerlinNoise/Images/example_cmy360_rgb360.png");
+    img.saveToFile("/home/bruno/CompSci/ProceduralGeneration/PerlinNoise/Images/example_cmy360_rgb360_octave.png");
    
     while(theWindow.isOpen()){
         sf::Event event;

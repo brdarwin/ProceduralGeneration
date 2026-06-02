@@ -20,6 +20,7 @@ public:
     float setInterpolation(float a, float b, float f);
     float fadingFucntion(float t);
     void setNoiseValue(std :: vector<Point> vecGradPoints);
+    void setNoiseValue(float noise);
     float getNoiseValue();
 
 };

@@ -44,10 +44,23 @@ sf :: Color rgb360(float noise){
     return sf :: Color(r,g,b);
 }
 
+sf :: Color waterLevel (float noise, float waterLevel){
+    float r = 0.0;
+    float  g = 255;
+    float b  = 0;
+    if(noise <= waterLevel){
+        b = variation_0_255(noise);
+        g = 0.0;
+    }
+
+    return sf :: Color(r,g,b);
+
+}
+
 int main(){
-    float maxSizeX = 1000;
-    float maxSizeY = 1000;
-    int   gradientDimension = 1000;
+    float maxSizeX = 100;
+    float maxSizeY = 100;
+    int   gradientDimension = 200;
     Perlin2D  myPerlin(sf :: Vector2f(maxSizeX, maxSizeY),gradientDimension);
     myPerlin.setGradients();
     myPerlin.setScreenPoints();
@@ -58,18 +71,23 @@ int main(){
     img.create(maxSizeX,maxSizeY);
     for(int i = 0; i < screenPoints.size(); i ++){
         Point p = screenPoints[i];
-        //float colors = shadesOfGray(p.getNoiseValue());
+        float colors = shadesOfGray(p.getNoiseValue());
+        
         //float colors = black_and_white(p.getNoiseValue());
         //float colors   =  variation_0_255(p.getNoiseValue());
         //sf :: Color pixelColor(colors, colors, colors);
-        sf :: Color pixelColor = rgb360(p.getNoiseValue());
-        img.setPixel(p.getCoordOrVecWeight(true).x,p.getCoordOrVecWeight(true).y, pixelColor);
+        //sf :: Color pixelColor = rgb360(p.getNoiseValue());
+        //sf :: Color pixelColor = waterLevel(p.getNoiseValue(),   0.75f);
+        //img.setPixel(p.getCoordOrVecWeight(true).x,p.getCoordOrVecWeight(true).y, pixelColor);
     }
+    
+    
     sf :: Texture tex;
     tex.loadFromImage(img);
     sf :: Sprite sprite(tex);
-
-     while(theWindow.isOpen()){
+    
+   
+    while(theWindow.isOpen()){
         sf::Event event;
         while (theWindow.pollEvent(event)){
             if(event.type == sf::Event::Closed){

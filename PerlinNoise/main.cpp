@@ -43,6 +43,28 @@ sf :: Color rgb360(float noise){
     return sf :: Color(r,g,b);
 }
 
+sf :: Color cmy360(float noise){
+    noise  =  360 *  ((1 - noise) / 2);
+    float r, g, b;
+    if((noise  <=  120)){
+        float  t = noise / 120;
+        r = 255 * (1 - t);
+        g = 255 * t;
+        b = 255 * t;
+    } else if( noise <= 240 ){
+        float t =  (noise - 120) / 120;
+        r =  255 * t;
+        g =  255 * (1 - t);
+        b =  255 * t;
+    }else{
+        float t =  (noise - 240) / 120;
+        r =  255 * t;
+        g =  255 * t;
+        b =   255 * (1 - t);
+    }
+    return sf :: Color(r,g,b);
+}
+
 sf :: Color waterLevel (float noise, float waterLevel){
     float r = 0.0;
     float  g = 255;
@@ -70,12 +92,13 @@ int main(){
     img.create(maxSizeX,maxSizeY);
     for(int i = 0; i < screenPoints.size(); i ++){
         Point p = screenPoints[i];
-        float colors = shadesOfGray(p.getNoiseValue());
+        //float colors = shadesOfGray(p.getNoiseValue());
         
         //float colors = black_and_white(p.getNoiseValue());
         //float colors   =  variation_0_255(p.getNoiseValue());
         //sf :: Color pixelColor(colors, colors, colors);
-        sf :: Color pixelColor = rgb360(p.getNoiseValue());
+        //sf :: Color pixelColor = rgb360(p.getNoiseValue());
+        sf :: Color pixelColor = cmy360(p.getNoiseValue());
         //sf :: Color pixelColor = waterLevel(p.getNoiseValue(),   0.75f);
         img.setPixel(p.getCoordOrVecWeight(true).x,p.getCoordOrVecWeight(true).y, pixelColor);
     }
@@ -85,7 +108,7 @@ int main(){
     tex.loadFromImage(img);
     sf :: Sprite sprite(tex);
     
-    img.saveToFile("/home/bruno/CompSci/ProceduralGeneration/PerlinNoise/Images/example_rgb360.png");
+    img.saveToFile("/home/bruno/CompSci/ProceduralGeneration/PerlinNoise/Images/example_cmy360.png");
    
     while(theWindow.isOpen()){
         sf::Event event;

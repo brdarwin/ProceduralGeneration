@@ -1,96 +1,93 @@
 #include "Point.h"
 
 
-Point :: Point (){
-    pointCoordinates_ = sf :: Vector2f(0.0f, 0.0f);
-    vectorWeight_ = sf :: Vector2f(0.0f, 0.0f);
-    noiseValue_ = 0.0f;
+Point :: Point(){
+    pointCoordinates_ = sf :: Vector2i(0,0);
+    pointVector_ = sf :: Vector2i(0,0);
+    
 }
 
-Point :: Point (sf :: Vector2f pointCoordinates){
+Point :: Point (sf :: Vector2i pointCoordinates){
     pointCoordinates_ = pointCoordinates;
-   
-}
-
-float :: Point :: randomFunction(float min, float max ){
-   
-
+    pointVector_ = sf :: Vector2i(0,0);
     
-    std :: random_device rd;
-    std :: mt19937 gen(rd());
     
-    std:: uniform_real_distribution<float> distrib(min, max);
-    return  distrib(gen);
-    
+} 
 
-}
 
-void :: Point :: setVecWeight(){
-    float angle = randomFunction(0.f, 2.f * 3.14159265f);
-    vectorWeight_.x = std :: sin(angle);
-    vectorWeight_.y = std :: cos(angle);
+
+void Point :: setVector(std :: mt19937& seed){
+    std:: uniform_int_distribution<> distrib(0, 7);
+    int index = distrib(seed);
+    pointVector_ = vectors_[index];
     
 }
 
-sf :: Vector2f Point :: getCoordOrVecWeight(bool isCoordinates){
-    if(isCoordinates){
-        return pointCoordinates_;
-    }
-    return vectorWeight_;
+sf ::Vector2i Point :: getVector(){
+    return pointVector_;
 }
 
-float :: Point :: setInfluence(Point gradPoint){
-    sf :: Vector2f gradWeight = gradPoint.getCoordOrVecWeight(false);
-    sf :: Vector2f gradCoord  = gradPoint.getCoordOrVecWeight(true);
-    return gradWeight.x * (pointCoordinates_.x - gradCoord.x)  + gradWeight.y * (pointCoordinates_.y - gradCoord.y);
-    
-    
+sf ::Vector2i Point :: getPointCoodrinates(){
+    return pointCoordinates_;
 }
 
-float :: Point :: setInterpolationFactor(Point fstGPoint, Point sndGPoint, bool isHorizontal){
-
-    sf :: Vector2f fstCoord = fstGPoint.getCoordOrVecWeight(true);
-    sf :: Vector2f sndCoord = sndGPoint.getCoordOrVecWeight(true);
-    if(isHorizontal){
-        return (pointCoordinates_.x  - fstCoord.x) / (sndCoord.x - fstCoord.x);
-    }
-    return (pointCoordinates_.y  - fstCoord.y) / (sndCoord.y - fstCoord.y);
+float Point :: calculateDotProduct(Point corner, float grad){
+    float distanceX = (pointCoordinates_.x - corner.getPointCoodrinates().x)/grad  ;
+    float distanceY = (pointCoordinates_.y - corner.getPointCoodrinates().y)/grad;
+  
+    return (corner.getVector().x * distanceX) + (corner.getVector().y * distanceY);
+ 
 }
 
-float :: Point :: setInterpolation(float a, float b, float f){
-    return a + f * (b - a);
-}
-float :: Point ::  fadingFucntion(float t)
+float Point::getPosition(float c0, float c1, bool isHorizontal)
 {
-    return t * t * t * (t * (t * 6.0f - 15.0f) + 10.0f);
+    if (isHorizontal)
+    {
+        return static_cast<float>(pointCoordinates_.x - c0)
+             / static_cast<float>(c1 - c0);
+    }
+
+    return static_cast<float>(pointCoordinates_.y - c0)
+         / static_cast<float>(c1 - c0);
 }
-void  :: Point :: setNoiseValue(std :: vector<Point> vecGradPoints){
-    Point topLeft = vecGradPoints[0];
-    Point topRight = vecGradPoints[1];
-    Point bottomLeft = vecGradPoints[2];
-    Point bottomRight = vecGradPoints[3];
-    float topLefInfluence = setInfluence(topLeft);
-    float topRightInfluence = setInfluence(topRight);
-    float bottomLefInfluence = setInfluence(bottomLeft);
-    float bottomRightInfluence = setInfluence(bottomRight);
-    float topT = setInterpolationFactor(topLeft,topRight, true);
-    float bottomT = setInterpolationFactor(bottomLeft,bottomRight, true);
-    float u = setInterpolationFactor(topLeft,bottomLeft, false); //vertical factor
-    topT = fadingFucntion(topT);
-    bottomT = fadingFucntion(bottomT);
-    u = fadingFucntion(u);
-    float topInterpolation = setInterpolation (topLefInfluence, topRightInfluence, topT);
-    float bottomInterpolation = setInterpolation(bottomLefInfluence, bottomRightInfluence, bottomT );
-    noiseValue_ = setInterpolation(topInterpolation, bottomInterpolation, u);
+
+float Point :: fade(float t)
+{
+    return t*t*t*(t*(t*6 - 15) + 10);
+}
 
 
+float Point :: calculateInterpolation(float a, float b, float u){
+    return a + (u *(b - a ));
+}
+
+void Point ::  setNoiseValue(std:: vector <std :: vector<Point>>  cell){
+    Point pointA = cell[0][0];
+    Point pointB = cell[1][0];
+    Point pointC = cell[0][1];
+    Point pointD = cell[1][1];
+    float grad = pointB.getPointCoodrinates().x - pointA.getPointCoodrinates().x; 
+    float dotA  = calculateDotProduct(pointA, grad);
+    float dotB  = calculateDotProduct(pointB, grad);
+    float dotC  = calculateDotProduct(pointC, grad);
+    float dotD = calculateDotProduct(pointD, grad);
+    float horizontal   = getPosition(pointA.getPointCoodrinates().x,pointB.getPointCoodrinates().x,true);
+    float vertical   = getPosition(pointA.getPointCoodrinates().y,pointC.getPointCoodrinates().y,false);
+    horizontal = fade(horizontal);
+    vertical  = fade(vertical);
+    float topInterpolation =  calculateInterpolation(dotA,dotB, horizontal);
+    float bottomInterpolation =  calculateInterpolation(dotC,dotD, horizontal);
+    float noise = calculateInterpolation(topInterpolation, bottomInterpolation, vertical);
+    noiseValues_.push_back(noise); 
     
-}
 
-void :: Point :: setNoiseValue(float noise){
-    noiseValue_ = noise;
 }
-
-float :: Point ::getNoiseValue(){
-    return noiseValue_;
+float Point :: getNoiseValue(){
+    float noiseValue = 0.0f;
+    float amplitude = 1.0f;
+    for(int i = 0;  i < noiseValues_.size(); i+=1){
+        noiseValue = noiseValue + (amplitude * noiseValues_[i]);
+        amplitude  = amplitude / 2;
+    }
+    return noiseValue;
 }

@@ -5,28 +5,34 @@
 #include <SFML/Graphics.hpp>
 #include <random>
 #include "Point.h"
-#include "Gradient.h"
+#include <typeinfo>
 
 
 class Perlin2D{
 private:
-    sf:: Vector2f screeenSize_;
-    float maxGradient_;
-    float minGradient_;
-    int   numberOfOctaves_;
-    //std :: vector <Gradient> gradients_;
-    std :: vector <std :: vector <Point> >  octavePoints_;
-    std :: vector <Point> screenPoints_;
+    sf :: Vector2i screenSize_;
+    sf :: Vector2i gradientRange_;
+    int numOfOctaves_;
+    int colorsSet_;
+    std :: vector <std :: vector <Point>> screenPoints_; 
+    std :: vector <std :: vector <Point>> gradPoints_;
+    std :: mt19937 seed_;
+    sf  :: Image noisyImg_;
+    
 
 public:
-    Perlin2D(sf:: Vector2f screeenSize, float gmaxGradient, float minGradient );
-    std :: vector <Gradient> setGradients(float grad);
-    std :: vector <Point> setPoints(std :: vector <Gradient> grad);
-    void setOctavePoints();
-    void setScreenPoints();
-    std :: vector <Point> getScreenPoints();
-
-
+    Perlin2D(std :: vector <int> setOfValues);
+    std :: vector <std :: vector <Point>> initializeMatrix(int  xRange, int yRange);
+    void setGradient();
+    void setInterpolations();
+    void colorsSet0To255();
+    void colorsSetBlackAndWhite();
+    sf :: Color colorsSetRGB360(float noise);
+    sf :: Color colorsSetCYM360(float noise);
+    void set360(bool isRGB);
+    void colorsSetMixRGBCYM360();
+    sf :: Image getTheNoise();
+    
 
 };
 

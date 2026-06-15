@@ -31,6 +31,7 @@ public:
     sf :: Color colorsSetCYM360(float noise);
     void set360(bool isRGB);
     void colorsSetMixRGBCYM360();
+    void ruptures();
     sf :: Image getTheNoise();
     
 

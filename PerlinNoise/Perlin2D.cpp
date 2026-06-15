@@ -181,6 +181,21 @@ void Perlin2D :: colorsSetMixRGBCYM360(){
     } 
 }
 
+void Perlin2D :: ruptures(){
+    for(int x = 0; x < noisyImg_.getSize().x; x +=1){
+        for(int y = 0; y < noisyImg_.getSize().y; y+=1){
+            float noise =   screenPoints_[x][y].getNoiseValue();
+            float r = 0, g = 0, b = 0;
+            float gap = 0.05;
+            if((-1*(gap) < noise) && (noise < gap)) r = 255;
+            //if(noise == 0) r = 255;
+            sf :: Color pxColors(r, g, b);
+            noisyImg_.setPixel(x,y, pxColors);
+        }
+    }
+}
+
+
 sf :: Image Perlin2D :: getTheNoise(){
     switch (colorsSet_)
     {
@@ -198,6 +213,9 @@ sf :: Image Perlin2D :: getTheNoise(){
         break;
     case 4:
         colorsSetMixRGBCYM360();
+        break;
+    case 5:
+        ruptures();
         break;
     default:
         colorsSet0To255();

@@ -1,142 +1,153 @@
 #include "Walker.h"
-#include <iostream>
-#include <vector>
-#include <random>
-#include <SFML/Graphics.hpp>  
+ 
 
 
-
-Walker :: Walker(float xPosition,  float yPosition, float screenSizeX, float screenSizeY,float usualRange,float levyFlightRange, int levyFlightProbability, sf::  Color walkerColor){
-    xPosition_ = xPosition;
-    yPosition_ = yPosition;
-    maxSizeX_  = screenSizeX;
-    maxSizeY_  = screenSizeY;
+Walker :: Walker(sf :: Vector2f screenSize, sf :: Color walkerColor, float usualRange){
+    screenSize_ = screenSize;
+    position_.x = screenSize_.x / 2;
+    position_.y = screenSize_.y/ 2;
     usualRange_ = usualRange;
-    levyFlightRange_ = levyFlightRange ;
-    levyFlightProbability_ = levyFlightProbability;
     movementRange_ = usualRange;
-    movementRangeIndex_ = usualRange;
-    walkerColor_ = walkerColor;
-}
-
-void Walker :: setPosition(float newPosition, bool isXPosition){
-    if  (isXPosition == true){
-        xPosition_  = newPosition;
-    }else if(isXPosition == false){
-        yPosition_ = newPosition;
-    }
+    maxLevyFkightRange_ =  20 * usualRange_;
+    minLevyFlightRange_ =  10 * usualRange_;
+    std :: random_device rd;
+    std :: mt19937 gen(rd());
+    seed_ = gen;
+    noises_ = getNoise();
+    
     
     
 }
 
-float Walker :: getPosition(bool isXPosition){
-    if  (isXPosition == true){
-        return xPosition_;
+
+ std :: vector<std::vector<float>> Walker :: getNoise( ){
+    std :: vector<int> setOfValues  = {256,256,256,8,0};
+    Perlin2D perlin(setOfValues);
+    perlin.setGradient();
+    perlin.setInterpolations();
+    std :: vector<std::vector<float>> matrix;
+    for(int x = 0; x < 256; x+=1){
+        std :: vector <float> noises;
+        for(int y = 0; y < 256; y+=1 ){
+            noises.push_back(perlin.getScreenPointNoise(x,y));
+        }
+        matrix.push_back(noises);
     }
-    return yPosition_;
-}
+    
+    return matrix;
+ } 
+
 
 template<typename T> T Walker :: randomFunction(T min, T max, bool isFloat){
    
 
     
-    std :: random_device rd;
-    std :: mt19937 gen(rd());
+    
     if(isFloat){
         std:: uniform_real_distribution<float> distrib(min, max);
-        return  distrib(gen);
+        return  distrib(seed_);
     }
 
     std:: uniform_int_distribution<> distrib(min, max);
-    return  distrib(gen);
+    return  distrib(seed_);
 
 }
 
-float Walker :: acceptRejectAlgorithm(){
-    float probability = randomFunction<float>(0,usualRange_, true);
-    float newNumber = randomFunction<float>(0,usualRange_, true);
-    if(probability > newNumber){
-        return probability;
-    }
-    return acceptRejectAlgorithm();
-}
-
-void Walker:: levyFlight(){
-    if(movementRangeIndex_ == 0){
-        if(randomFunction<int>(0,100,  false) <= levyFlightProbability_){
-            movementRange_ = levyFlightRange_;
-        }else{
-            movementRange_ = usualRange_;
+void Walker :: movementRange(){
+    if(rangeIndex_ < movementRange_){
+        rangeIndex_ +=1;
+    }else{
+        setDirection_ = randomFunction(0, 7,false);
+        movementRange_ = usualRange_;
+        if(randomFunction(0,100, false) == 1){
+            movementRange_ = maxLevyFkightRange_;
         }
-    }
-}
+        rangeIndex_ = 0;
 
-void Walker:: setMovementRange(){
-    if(movementRangeIndex_  >= movementRange_){
-        setDirection_ = randomFunction<int>(0, 7, false);
-        movementRangeIndex_ = 0;
-    }else{
-        movementRangeIndex_ = movementRangeIndex_ + 1;
-    }
-}
-
-void Walker  :: nextStep(){
-    
-     
-
-
-    
-    
-
-    
-    if(setDirection_ == 0){ 
-        setPosition(xPosition_ + 1,  true);
-    }else if(setDirection_ == 1){ 
-        setPosition(xPosition_ - 1,  true);
-    }else if(setDirection_ == 2){ 
-        setPosition(yPosition_ + 1,  false);
-    }else if(setDirection_ == 3) {
-        setPosition(yPosition_ - 1,  false);
-    }else if(setDirection_ == 4){
-        setPosition(xPosition_ + 1,  true);
-        setPosition(yPosition_ + 1,  false);
-    }else if(setDirection_ == 5){
-        setPosition(xPosition_ + 1,  true);
-        setPosition(yPosition_ - 1,  false);
-    }else if(setDirection_ == 6){
-        setPosition(xPosition_ - 1,  true);
-        setPosition(yPosition_ + 1,  false);
-    }else{
-        setPosition(xPosition_ - 1,  true);
-        setPosition(yPosition_ - 1,  false);
-    }
-    
-    
-}
-
-
-
-void Walker:: eliminatingBorders(){
-    if(getPosition(true) > maxSizeX_){
-        setPosition(0,true);
-    } else if(getPosition(true) < 0){
-        setPosition(maxSizeX_ ,true);
     }
 
-    if(getPosition(false) > maxSizeY_){
-        setPosition(0,false);
-    } else if(getPosition(false) < 0){
-        setPosition(maxSizeY_ ,false);
+} 
+
+
+
+void Walker :: setSteps(){
+    iX_ += randomFunction(-1, 1, false);
+    iX_ += randomFunction(-1, 1, false);
+    if(iX_ < 0) {iX_ = 0;}
+    else if(iX_ > 255){iX_ = 255;}
+    if(iY_ < 0) {iY_ = 0;}
+    else if(iY_ > 255){iY_ = 255;}
+    float noise = noises_[iX_][iY_];
+    float angle = noise * M_PI;
+    
+    switch (setDirection_)
+    {
+    case 0:
+        position_.x += cos(angle);
+        break;
+    case 1: 
+        position_.y += sin(angle);
+        break;
+    case 2: 
+        position_.x -= cos(angle);
+        
+        break;
+    case 3: 
+        position_.y -= sin(angle);
+        
+        break;
+    case 4: 
+        position_.x += cos(angle);
+        position_.y += sin(angle);
+        break;
+    case 5: 
+        position_.x += cos(angle);
+        position_.y -= sin(angle);
+        break;
+    case 6: 
+        position_.x -= cos(angle);
+        position_.y -= sin(angle);
+        break;
+    case 7: 
+        position_.x -= cos(angle);
+        position_.y += sin(angle);
+        break;
+    default:
+        break;
+    } 
+   
+}
+
+void Walker :: eliminatingBorders(){
+    if(position_.x > screenSize_.x){
+        position_.x = 0;
+    }else if(position_.x < 0){
+        position_.x = screenSize_.x;
     }
 
+    if(position_.y > screenSize_.y){
+        position_.y = 0;
+    }else if(position_.y < 0){
+        position_.y = screenSize_.y;
+    }
     
-    
-
-    
-
 }
 
-void Walker:: setWalkerPosition(sf:: CircleShape& shape){
-    shape.setFillColor(walkerColor_);
-    shape.setPosition(sf:: Vector2f(getPosition(true),getPosition(false)));
+
+sf :: Vector2f Walker :: getPosition(){
+
+    return position_;
 }
+
+
+
+
+
+
+    
+    
+
+    
+
+
+

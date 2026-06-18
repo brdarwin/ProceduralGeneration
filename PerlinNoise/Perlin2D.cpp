@@ -79,6 +79,10 @@ void Perlin2D :: setInterpolations(){
     }
 }
 
+float Perlin2D ::  getScreenPointNoise(int x, int y){
+    return screenPoints_[x][y].getNoiseValue();
+}
+
 void Perlin2D :: colorsSet0To255(){
     for(int x = 0; x < noisyImg_.getSize().x; x +=1){
         for(int y = 0; y < noisyImg_.getSize().y; y+=1){

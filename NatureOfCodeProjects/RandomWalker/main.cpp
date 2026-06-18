@@ -2,21 +2,15 @@
 #include <SFML/Graphics.hpp>
 #include "Walker.h"
 #include <vector>
+#include "/home/bruno/CompSci/ProceduralGeneration/PerlinNoise/Perlin2D.h"
+#include "/home/bruno/CompSci/ProceduralGeneration/PerlinNoise/Point.h"
 
 
 int main (){
-    float  maxSizeX = 1920;
-    float  maxSizeY = 1080;
-    sf:: RenderWindow theWindow(sf::VideoMode(maxSizeX,maxSizeY),  "Random Walker");
+    sf :: Vector2f screenSize(1024, 1024);
+    sf:: RenderWindow theWindow(sf::VideoMode(screenSize.x,screenSize.y),  "Random Walker");
     theWindow.setFramerateLimit(60);
-    std:: vector <Walker> walkers;
-    Walker classicWalker(maxSizeX/2, maxSizeY/2, maxSizeX, maxSizeY, 0, 0,0, sf::Color(255, 0, 0));
-    Walker rangedStepsWalker(maxSizeX/4, maxSizeY/2, maxSizeX, maxSizeY, 5, 0,0, sf::Color(0, 255, 0));
-    Walker levyWalker(maxSizeX * (4/3), maxSizeY/2, maxSizeX, maxSizeY, 5, 100,1, sf::Color(0, 0, 255));
-    walkers.push_back(classicWalker);
-    walkers.push_back(rangedStepsWalker);
-    walkers.push_back(levyWalker);
-    sf :: CircleShape circleWalker(1.0f);
+    Walker *myWalker = new Walker(screenSize, sf :: Color(0,255,255), 10);
     
     
     while(theWindow.isOpen()){
@@ -27,17 +21,18 @@ int main (){
             }
         
         }
-        for(int i = 0; i < walkers.size(); i++){
-            walkers[i].levyFlight();
-            walkers[i].setMovementRange();
-            walkers[i].nextStep();
-            walkers[i].eliminatingBorders();
-            walkers[i].setWalkerPosition(circleWalker);
-            theWindow.draw(circleWalker);
-        }
-        
+        myWalker -> movementRange();
+        myWalker -> setSteps();
+        myWalker -> eliminatingBorders();
+        sf :: CircleShape walker(1.0f);
+        walker.setFillColor(sf :: Color(0,0,255));
+        sf :: Vector2f  vecPosition= myWalker -> getPosition();
+        walker.setPosition(vecPosition);
+        theWindow.draw(walker);
         theWindow.display();
+        //theWindow.clear();
 	    
     }
+    delete myWalker;
     return 0;
 }

@@ -33,7 +33,7 @@ public:
     void colorsSetMixRGBCYM360();
     void ruptures();
     sf :: Image getTheNoise();
-    
+    float  getScreenPointNoise(int x, int y);
 
 };
 

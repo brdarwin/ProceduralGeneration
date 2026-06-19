@@ -199,6 +199,31 @@ void Perlin2D :: ruptures(){
     }
 }
 
+void Perlin2D :: relief(){
+    for(int x = 0; x < noisyImg_.getSize().x; x +=1){
+        for(int y = 0; y < noisyImg_.getSize().y; y+=1){
+            float noise =   screenPoints_[x][y].getNoiseValue();
+            float r = 0, g = 0, b = 0;
+            
+            if(noise < 0){
+                g = 127.5;
+            }else if(noise < 0.5){
+                g = 255;
+            }else if(noise < 0.75){
+                g = 255;
+                b = 127.5;
+            }else if(noise < 0.875){
+                g = b = 255;
+            }else if(noise < 0.9375){
+                g = r = b = 127.5;
+            }else{
+                g = r = b = 255;
+            }
+            sf :: Color pxColors(r, g, b);
+            noisyImg_.setPixel(x,y, pxColors);
+        }
+    }
+}
 
 sf :: Image Perlin2D :: getTheNoise(){
     switch (colorsSet_)
@@ -220,6 +245,9 @@ sf :: Image Perlin2D :: getTheNoise(){
         break;
     case 5:
         ruptures();
+        break;
+    case 6:
+        relief();
         break;
     default:
         colorsSet0To255();

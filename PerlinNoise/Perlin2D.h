@@ -32,6 +32,7 @@ public:
     void set360(bool isRGB);
     void colorsSetMixRGBCYM360();
     void ruptures();
+    void relief();
     sf :: Image getTheNoise();
     float  getScreenPointNoise(int x, int y);
 

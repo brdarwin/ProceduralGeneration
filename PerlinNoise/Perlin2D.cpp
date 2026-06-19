@@ -108,81 +108,112 @@ void Perlin2D :: colorsSetBlackAndWhite(){
  
 }
 
-sf :: Color Perlin2D :: colorsSetRGB360(float noise){
-    float r = 0;
-    float g = 0;
-    float b = 0;
-            if(noise < 120){
-                float t = noise / 120;
-                r = 255 * t;
-                b = 255 * (1 -t);
-            }
-            else if(noise < 240){
-                float t = (noise - 120) / 120;
-                g = 255 * t;
-                r = 255 * (1 -t);
-            }else{
-                float t = (noise - 240) / 120;
-                b = 255 * t;
-                g = 255 * (1 -t);
-            }    
-    return sf :: Color (r,g,b);
-}
-
-sf :: Color Perlin2D :: colorsSetCYM360(float noise){
-    float r = 0;
-    float g = 0;
-    float b = 0;
-            if(noise < 120){
-                float t = noise / 120;
-                r = 255 * (1 -t);
-                g = 255 * t;
-                b = 255 * t;
-            }
-            else if(noise < 240){
-                float t = (noise - 120) / 120;
-                r = 255 * t;
-                g = 255 * t;
-                b = 255 * (1 -t);
-            }else{
-                float t = (noise - 240) / 120;
-                r = 255 * t;
-                g = 255 * (1 -t);
-                b = 255 * t;
-            }    
-    return sf :: Color (r,g,b);
-}
-
-void Perlin2D :: set360(bool isRGB){
-   for(int x = 0; x < noisyImg_.getSize().x; x +=1){
+void Perlin2D ::  colorsSetRGB360(){
+    
+    for(int x = 0; x < noisyImg_.getSize().x; x +=1){
         for(int y = 0; y < noisyImg_.getSize().y; y+=1){
-            float noise = 360 * ( (1 + screenPoints_[x][y].getNoiseValue()) / 2);
-            sf :: Color pxColors(0, 0, 0);
-            if(isRGB){
-                pxColors = colorsSetRGB360(noise);
-            }else{
-                pxColors = colorsSetCYM360(noise);
+            float r = 0;
+            float g = 0;
+            float b = 0;
+            float noise = 360  * ( (1 +  screenPoints_[x][y].getNoiseValue()) / 2) ;
+             if(noise < 120){
+                float t = noise / 120;
+                r = 255 * t;
+                b = 255 * (1 -t);
             }
-            noisyImg_.setPixel(x,y, pxColors);
+            else if(noise < 240){
+                float t = (noise - 120) / 120;
+                g = 255 * t;
+                r = 255 * (1 -t);
+            }else{
+                float t = (noise - 240) / 120;
+                b = 255 * t;
+                g = 255 * (1 -t);
+            }
+            sf :: Color pxColor(r,g,b);
+            noisyImg_.setPixel(x,y,pxColor);    
         }
     }
-}
+}     
+  
+
+void  Perlin2D :: colorsSetCYM360(){
+    for(int x = 0; x < noisyImg_.getSize().x; x +=1){
+        for(int y = 0; y < noisyImg_.getSize().y; y+=1){
+            float r = 0;
+            float g = 0;
+            float b = 0;
+            float noise = 360  * ( (1 +  screenPoints_[x][y].getNoiseValue()) / 2) ;
+             if(noise < 120){
+                float t = noise / 120;
+                r = 255 * (1 - t);
+                g = 255 * t;
+                b = 255 * t;
+            }
+            else if(noise < 240){
+                float t = (noise - 120) / 120;
+                r = 255 * t;
+                g = 255 * t;
+                b = 255 * (1 - t);
+
+            
+            }else{
+                float t = (noise - 240) / 120;
+                r = 255 * t;
+                g = 255 * (1 - t);
+                b = 255 * t;
+
+            }
+            sf :: Color pxColor(r,g,b);
+            noisyImg_.setPixel(x,y,pxColor);    
+        }
+    }
+    
+} 
+
+
 
 void Perlin2D :: colorsSetMixRGBCYM360(){
    for(int x = 0; x < noisyImg_.getSize().x; x +=1){
         for(int y = 0; y < noisyImg_.getSize().y; y+=1){
-            sf :: Color pxColors(0, 0, 0);  
-            float noise = 360  * screenPoints_[x][y].getNoiseValue();
-            if(noise < 0){
-                noise = (-1)*noise;
-                pxColors = colorsSetCYM360(noise);
-                
-            }else{
-                pxColors = colorsSetRGB360(noise);
+            float r = 0;
+            float g = 0;
+            float b = 0;
+            float noise = 360  * ( (1 +  screenPoints_[x][y].getNoiseValue()) / 2) ;
+             if(noise < 60){ // red
+                float t = noise / 60;
+                r = 255;
+                b = 255 * (1 - t);
             }
-            noisyImg_.setPixel(x,y, pxColors);
+            else if(noise < 120){ // yellow
+                float t = (noise - 60) / 60;
+                r = 255;
+                g = 255 * t;
+                
+
+            }else if(noise < 180){ //  green
+                float t = (noise - 120) / 60;
+                r = 255 * (1 - t);
+                g = 255;
+            
+            
+            }else if(noise < 240){//cyan
+                float t = (noise - 180) / 60;
+                g = 255;
+                b = 255 * t;
+            }else if(noise < 300){// blue
+                float t = (noise - 240) / 60;
+                g = 255 * (1 - t);
+                b = 255;
+            }else{//magenta
+                float t = (noise - 300) / 60;
+                r = 255 * t;
+                b = 255;
+            }
+            sf :: Color pxColor(r,g,b);
+            noisyImg_.setPixel(x,y,pxColor);    
         }
-    } 
+    }
 }
 
 void Perlin2D :: ruptures(){
@@ -235,10 +266,10 @@ sf :: Image Perlin2D :: getTheNoise(){
         colorsSetBlackAndWhite();
         break;
     case 2:
-        set360(true);
+        colorsSetRGB360();
         break;
     case 3:
-        set360(false);
+        colorsSetCYM360();
         break;
     case 4:
         colorsSetMixRGBCYM360();

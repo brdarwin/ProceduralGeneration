@@ -27,9 +27,8 @@ public:
     void setInterpolations();
     void colorsSet0To255();
     void colorsSetBlackAndWhite();
-    sf :: Color colorsSetRGB360(float noise);
-    sf :: Color colorsSetCYM360(float noise);
-    void set360(bool isRGB);
+    void colorsSetRGB360();
+    void colorsSetCYM360();
     void colorsSetMixRGBCYM360();
     void ruptures();
     void relief();

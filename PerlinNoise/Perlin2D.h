@@ -33,6 +33,7 @@ public:
     void ruptures();
     void relief();
     void temperature();
+    void humidity();
     sf :: Image getTheNoise();
     float  getScreenPointNoise(int x, int y);
 

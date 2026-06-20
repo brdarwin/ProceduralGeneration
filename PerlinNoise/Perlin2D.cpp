@@ -289,6 +289,28 @@ void Perlin2D :: temperature(){
 
 }
 
+void  Perlin2D :: humidity( ){
+   for(int x = 0; x < noisyImg_.getSize().x; x +=1){
+        for(int y = 0; y < noisyImg_.getSize().y; y+=1){
+            float r = 0, g = 0, b = 255;
+            float noise =  4 * ( (1 - screenPoints_[x][y].getNoiseValue()) / 2);
+            if(noise < 1){ // very low;
+                g = 255;
+            }else if(noise < 2){ // low;
+                g = 127.5;
+            }else if(noise < 3){ // high
+                g  = 60.3;
+            }else{// very high
+                r = g = 0;
+            }
+            sf :: Color pxColors(r, g, b);
+            noisyImg_.setPixel(x,y, pxColors);
+        }
+    }
+ 
+
+}
+
 sf :: Image Perlin2D :: getTheNoise(){
     switch (colorsSet_)
     {
@@ -316,6 +338,9 @@ sf :: Image Perlin2D :: getTheNoise(){
     case 7:
         temperature();
         break;
+    case 8:
+         humidity();
+         break;
     default:
         colorsSet0To255();
         break;

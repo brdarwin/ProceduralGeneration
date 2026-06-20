@@ -4,8 +4,7 @@
 #include <vector>
 #include <iostream>
 #include <random>
-#include "/home/bruno/CompSci/ProceduralGeneration/PerlinNoise/Perlin2D.h"
-#include "/home/bruno/CompSci/ProceduralGeneration/PerlinNoise/Point.h"
+#include "/home/bruno/CompSci/ProceduralGeneration/PerlinNoise_2.0/Perlin.h"
 
 class Walker{
     private:

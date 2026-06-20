@@ -22,19 +22,12 @@ Walker :: Walker(sf :: Vector2f screenSize, sf :: Color walkerColor, float usual
 
  std :: vector<std::vector<float>> Walker :: getNoise( ){
     std :: vector<int> setOfValues  = {256,256,256,8,0};
-    Perlin2D perlin(setOfValues);
-    perlin.setGradient();
-    perlin.setInterpolations();
-    std :: vector<std::vector<float>> matrix;
-    for(int x = 0; x < 256; x+=1){
-        std :: vector <float> noises;
-        for(int y = 0; y < 256; y+=1 ){
-            noises.push_back(perlin.getScreenPointNoise(x,y));
-        }
-        matrix.push_back(noises);
-    }
+    Perlin perlin(setOfValues);
+    perlin.setOctaves();
+    perlin.setGradCells();
+    perlin.settingNoise();
     
-    return matrix;
+    return perlin.getNoise();
  } 
 
 

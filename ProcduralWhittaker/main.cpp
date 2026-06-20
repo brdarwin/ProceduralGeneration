@@ -1,8 +1,6 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <vector>
-#include "/home/bruno/CompSci/ProceduralGeneration/PerlinNoise/Perlin2D.h"
-#include "/home/bruno/CompSci/ProceduralGeneration/PerlinNoise/Point.h"
 #include "Ecosystem.h"
 
 

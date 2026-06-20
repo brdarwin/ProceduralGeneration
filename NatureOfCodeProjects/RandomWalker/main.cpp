@@ -2,8 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include "Walker.h"
 #include <vector>
-#include "/home/bruno/CompSci/ProceduralGeneration/PerlinNoise/Perlin2D.h"
-#include "/home/bruno/CompSci/ProceduralGeneration/PerlinNoise/Point.h"
+
 
 
 int main (){

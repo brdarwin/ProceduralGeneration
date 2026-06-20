@@ -10,19 +10,13 @@ Ecosystem :: Ecosystem(sf :: Vector2i screenSize){
 
 std :: vector<std::vector<float>> Ecosystem :: getNoise(std :: vector<int> setOfValues ){
     
-    Perlin2D perlin(setOfValues);
-    perlin.setGradient();
-    perlin.setInterpolations();
-    std :: vector<std::vector<float>> matrix;
-    for(int x = 0; x < screenSize_.x; x+=1){
-        std :: vector <float> noises;
-        for(int y = 0; y < screenSize_.y; y+=1 ){
-            noises.push_back(perlin.getScreenPointNoise(x,y));
-        }
-        matrix.push_back(noises);
-    }
+    Perlin perlin(setOfValues);
+    perlin.setOctaves();
+    perlin.setGradCells();
+    perlin.settingNoise();
     
-    return matrix;
+    
+    return perlin.getNoise();
 } 
 
 void Ecosystem :: settingBiomes(){

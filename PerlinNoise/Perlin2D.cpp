@@ -173,6 +173,8 @@ void  Perlin2D :: colorsSetCYM360(){
 
 
 
+
+
 void Perlin2D :: colorsSetMixRGBCYM360(){
    for(int x = 0; x < noisyImg_.getSize().x; x +=1){
         for(int y = 0; y < noisyImg_.getSize().y; y+=1){
@@ -256,6 +258,37 @@ void Perlin2D :: relief(){
     }
 }
 
+void Perlin2D :: temperature(){
+    for(int x = 0; x < noisyImg_.getSize().x; x +=1){
+        for(int y = 0; y < noisyImg_.getSize().y; y+=1){
+            float r = 0, g = 0, b = 0;
+            float noise =   screenPoints_[x][y].getNoiseValue();
+            if(noise < -0.66){ // very Cold
+                b = 255;
+                 
+            }else if(noise < -0.33){// cold;
+                b = 255;
+                g = 127.5;
+            }else if(noise < 0 ){ // mildly cold;
+                b = 255;
+                g = 255;
+            }else if(noise < 0.33){ // mildly hot;
+                r  = 255;
+                g  = 255;
+            }else if(noise < 0.66){ // hot;
+                r = 255;
+                g = 127.5;
+            }else{ // very hot;
+                r = 255;
+            }
+            sf :: Color pxColors(r, g, b);
+            noisyImg_.setPixel(x,y, pxColors);
+        }
+    }
+
+
+}
+
 sf :: Image Perlin2D :: getTheNoise(){
     switch (colorsSet_)
     {
@@ -279,6 +312,9 @@ sf :: Image Perlin2D :: getTheNoise(){
         break;
     case 6:
         relief();
+        break;
+    case 7:
+        temperature();
         break;
     default:
         colorsSet0To255();

@@ -32,6 +32,7 @@ public:
     void colorsSetMixRGBCYM360();
     void ruptures();
     void relief();
+    void temperature();
     sf :: Image getTheNoise();
     float  getScreenPointNoise(int x, int y);
 

@@ -48,7 +48,7 @@ int main(int argc, char  *argv[]){
 
 
     }
-    myImg.saveToFile("/home/bruno/CompSci/ProceduralGeneration/PerlinNoise/Images/exampleMIXCYMRGB_02.png");
+    
     
     
    

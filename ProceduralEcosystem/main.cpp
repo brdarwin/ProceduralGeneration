@@ -45,32 +45,13 @@ std :: vector<std :: vector<float>> setMatrix(int maxX, int  maxY){
     return matrix;
 }
 
-//Implement Later;
-void setLatitude(std :: vector <std:: vector<float>> *noise){
-    for(int x = 0; x < noise -> size(); x+=1){
-        for(int y = 0; y <  noise[x].size(); y+=1 ){
-            float latRange = noise[x].size();
-            float amplitude = latRange / 4;
-            if((y < amplitude) || (y > (latRange - amplitude))){// Polar
-               (*noise)[x][y] = 6.0f;
-            } else if((y < amplitude * 2) || (y > (latRange - amplitude * 2))){// boreal
-               (*noise)[x][y] = 12.0f ;
-            } else if((y < amplitude * 3) || (y > (latRange - amplitude * 3))){// temperate
-               (*noise)[x][y] = 24.0f;
-            }else{//tropical;
-                (*noise)[x][y] = 35.0f;
-            }
-        }
-    }
-
-}
 
 
 int main(int argc, char* argv[]){
     std :: vector<int> setOfValues;
-    setOfValues.push_back(256); //Screen Width
-    setOfValues.push_back(setOfValues[0]); //screen Height
-    setOfValues.push_back(setOfValues[0]);// maxGradient
+    setOfValues.push_back(1536); //Screen Width
+    setOfValues.push_back(1024); //screen Height
+    setOfValues.push_back(512);// maxGradient
     setOfValues.push_back(8); // minGradient)
     
     if(argc > 1){
